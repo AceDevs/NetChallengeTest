@@ -18,23 +18,23 @@ Project for .Net Api Challenge provided by SoliSystems
 
 ## Endpoints disponibles
 ### Products
-GET => https://localhost/products?page=1&pageSize=60&sortBy=ProductName ASC
-GET => https://localhost/products/id/{id}
-GET => https://localhost/products/name/{productName}
-GET => https://localhost/products/productcode/{productCode}
-POST => https://localhost/products
-PUT => https://localhost/products
-DELETE => https://localhost/products
+- GET => https://localhost/products?page=1&pageSize=60&sortBy=ProductName ASC
+- GET => https://localhost/products/id/{id}
+- GET => https://localhost/products/name/{productName}
+- GET => https://localhost/products/productcode/{productCode}
+- POST => https://localhost/products
+- PUT => https://localhost/products
+- DELETE => https://localhost/products
 
 ### Categories
-GET => https://localhost/categories?page=1&pageSize=60&sortBy=ProductName ASC
-GET => https://localhost/categories/id/{id}
-GET => https://localhost/categories/name/{categoryName}
-POST => https://localhost/categories
-PUT => https://localhost/categories
-DELETE => https://localhost/categories
+- GET => https://localhost/categories?page=1&pageSize=60&sortBy=CategoryName DESC
+- GET => https://localhost/categories/id/{id}
+- GET => https://localhost/categories/name/{categoryName}
+- POST => https://localhost/categories
+- PUT => https://localhost/categories
+- DELETE => https://localhost/categories
 
 ### Import Data
-GET => https://localhost/importData
+- GET => https://localhost/importData
   - Este endpoint acepta archivos .csv el cual intentara importar y cargar las categorias y productos a la base de datos.
 
