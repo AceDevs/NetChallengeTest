@@ -66,16 +66,16 @@ namespace NetChallengeTestAPI.Services.Repositories
 
         public async Task<Category> FindByNameAsync(string categoryName)
         {
-            string commandText = $"SELECT * FROM \"Categories\" WHERE CategoryName = @categoryName";
+            string commandText = $"SELECT * FROM \"Categories\" WHERE \"CategoryName\" = @categoryName";
             var queryArguments = new { categoryName };
 
             using var connection = _context.CreateConnection();
-            var categories = await connection.QueryFirstAsync<Category>(commandText);
+            var categories = await connection.QueryFirstAsync<Category>(commandText, queryArguments);
 
             return categories;
         }
 
-        public async Task Update(Category category)
+        public async Task<bool> Update(Category category)
         {
             var commandText = $@"UPDATE ""Categories""
                 SET ""CategoryCode"" = @categoryCode, ""CategoryName"" = @categoryName
@@ -89,7 +89,7 @@ namespace NetChallengeTestAPI.Services.Repositories
             };
 
             using var connection = _context.CreateConnection();
-            await connection.ExecuteAsync(commandText, queryArgs);
+            return await connection.ExecuteAsync(commandText, queryArgs) > 0;
         }
 
         public async Task<bool> Delete(int id)

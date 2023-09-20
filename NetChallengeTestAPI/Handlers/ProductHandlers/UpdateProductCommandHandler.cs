@@ -20,8 +20,8 @@ namespace NetChallengeTestAPI.Handlers.ProductHandlers
                 ProductName = request.ProductName,
                 CategoryId = request.CategoryId
             };
-            await _productsRepository.Update(category);
-
+            var gotUpdated = await _productsRepository.Update(category);
+            if (!gotUpdated) throw new Exception("Product not found. No modifications aplied.");
             return category;
         }
     }

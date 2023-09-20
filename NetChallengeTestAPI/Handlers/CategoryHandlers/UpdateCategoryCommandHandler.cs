@@ -19,8 +19,8 @@ namespace NetChallengeTestAPI.Handlers.CategoryHandlers
                 CategoryCode = request.CategoryCode,
                 CategoryName = request.CategoryName,
             };
-            await _categoriesRepository.Update(category);
-
+            var gotUpdated = await _categoriesRepository.Update(category);
+            if (!gotUpdated) throw new Exception("Category not found. No modifications aplied.");
             return category;
         }
     }

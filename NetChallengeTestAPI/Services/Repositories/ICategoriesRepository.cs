@@ -9,6 +9,6 @@ namespace NetChallengeTestAPI.Services.Repositories
         Task<Category> FindByIdAsync(int id);
         Task<Category> FindByNameAsync(string categoryName);
         Task<IList<Category>> GetAsync(int page, int pageSize, string sortBy);
-        Task Update(Category category);
+        Task<bool> Update(Category category);
     }
 }

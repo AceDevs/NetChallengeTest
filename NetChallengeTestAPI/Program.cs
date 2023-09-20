@@ -13,6 +13,9 @@ using CsvHelper.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -38,48 +41,24 @@ builder.Services.AddScoped<IValidator<Category>, CategoryValidator>()
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.UseHttpsRedirection();
 
 app.MapCategoryEndpoints()
-    .MapProductEndpoints();
+    .MapProductEndpoints()
+    .MapImportEndpoints();
 
 
-app.MapGet("importData", async (ICategoriesService categoriesService, IProductsService productsService, HttpContext context) =>
+app.MapGet("", context =>
 {
-    try
-    {
-        var records = new List<CategoryProductRaw>();
-        if (!context.Request.Form.Files.Any())
-            throw new Exception("File not provided.");
-        using var reader = new StreamReader(context.Request.Form.Files.FirstOrDefault().OpenReadStream());
-        using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)))
-            records = csv.GetRecords<CategoryProductRaw>().ToList();
-        var categories = new List<Category>();
-        var products = new List<Product>();
-        records.ForEach(x =>
-        {
-            Category currentCategory;
-            if (!categories.Any(c => c.CategoryCode == x.CategoryCode))
-                categories.Add(new Category { CategoryCode = x.CategoryCode, CategoryName = x.CategoryName, Products = new List<Product>() });
-
-            currentCategory = categories.First(c => c.CategoryCode == x.CategoryCode);
-            currentCategory.Products.Add(new Product { ProductCode = x.ProductCode, ProductName = x.ProductName });
-        });
-        var createdCategories = (List<Category>)await categoriesService.BulkCreate(categories);
-        categories.ForEach(c => c.Id = createdCategories.FirstOrDefault(cc => c.CategoryCode == cc.CategoryCode).Id);
-        var createdProducts = (List<Product>)await productsService
-                                .BulkCreate(categories
-                                    .SelectMany(
-                                        c => c.Products,
-                                        (c, p) => new Product { CategoryId = c.Id, ProductCode = p.ProductCode, ProductName = p.ProductName })
-                                    .ToList());
-
-        return Results.Ok(categories);
-    }
-    catch (Exception ex)
-    {
-        return Results.Problem(ex.Message);
-    }
+    context.Response.Redirect("./swagger/index.html", permanent: false);
+    return Task.FromResult(0);
 });
 
 app.Run();

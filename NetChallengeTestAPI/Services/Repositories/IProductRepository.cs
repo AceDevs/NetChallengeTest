@@ -10,6 +10,6 @@ namespace NetChallengeTestAPI.Services.Repositories
         Task<Product> FindByIdAsync(int id);
         Task<Product> FindByNameAsync(string productName);
         Task<IList<Product>> GetAsync(int page, int pageSize, string sortBy);
-        Task Update(Product product);
+        Task<bool> Update(Product product);
     }
 }

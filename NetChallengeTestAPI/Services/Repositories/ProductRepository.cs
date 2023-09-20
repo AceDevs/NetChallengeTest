@@ -72,7 +72,7 @@ namespace NetChallengeTestAPI.Services.Repositories
             var queryArguments = new { productName };
 
             using var connection = _context.CreateConnection();
-            var products = await connection.QueryFirstAsync<Product>(commandText);
+            var products = await connection.QueryFirstAsync<Product>(commandText, queryArguments);
 
             return products;
         }
@@ -83,12 +83,12 @@ namespace NetChallengeTestAPI.Services.Repositories
             var queryArguments = new { productCode };
 
             using var connection = _context.CreateConnection();
-            var products = await connection.QueryFirstAsync<Product>(commandText);
+            var products = await connection.QueryFirstAsync<Product>(commandText, queryArguments);
 
             return products;
         }
 
-        public async Task Update(Product product)
+        public async Task<bool> Update(Product product)
         {
             var commandText = $@"UPDATE ""Products""
                 SET ""ProductCode"" = @productCode, ""ProductName"" = @productName
@@ -102,7 +102,7 @@ namespace NetChallengeTestAPI.Services.Repositories
             };
 
             using var connection = _context.CreateConnection();
-            await connection.ExecuteAsync(commandText, queryArgs);
+            return await connection.ExecuteAsync(commandText, queryArgs) > 0;
         }
 
         public async Task<bool> Delete(int id)
